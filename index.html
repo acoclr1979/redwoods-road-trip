@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redwoods Road Trip</title>
+    <meta property="og:title" content="Redwoods Road Trip">
+    <meta property="og:description" content="San Francisco to the Redwoods — a father-son road trip. July 29 – August 2, 2026.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+        :root {
+            --forest: #0d1f14;
+            --forest-deep: #081410;
+            --moss: #4a7c59;
+            --moss-light: #7fae87;
+            --bark: #6b4a35;
+            --amber: #d9a441;
+            --cream: #f2ead3;
+            --fog: rgba(242,234,211,0.55);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+            color: var(--cream);
+            background: linear-gradient(180deg, var(--forest) 0%, var(--forest-deep) 100%);
+        }
+
+        .page-wrap { width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+        .hero-wrap {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 80px 30px 50px;
+        }
+
+        .hero-eyebrow { font-size: 0.82em; letter-spacing: 5px; text-transform: uppercase; color: var(--moss-light); margin-bottom: 14px; }
+        .hero-title { font-size: clamp(2.4rem, 9vw, 4rem); font-weight: 900; line-height: 1.02; letter-spacing: -1px; color: var(--cream); margin-bottom: 8px; }
+        .hero-sub { font-size: clamp(1rem, 3vw, 1.3rem); font-weight: 300; letter-spacing: 1px; color: var(--amber); margin-bottom: 18px; }
+        .hero-dates { font-size: 0.9em; color: var(--fog); letter-spacing: 2px; margin-bottom: 6px; }
+        .hero-tagline { font-size: 0.85em; color: var(--fog); max-width: 420px; line-height: 1.6; margin-top: 10px; }
+
+        .sections-wrap {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            padding: 10px 24px 90px;
+        }
+
+        .panel {
+            background: rgba(242,234,211,0.05);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(242,234,211,0.12);
+            border-radius: 18px;
+            padding: 26px 28px;
+        }
+        .panel h2 { font-size: 1.2em; font-weight: 700; margin-bottom: 4px; color: var(--cream); }
+        .panel-sub { font-size: 0.82em; color: var(--fog); margin-bottom: 20px; }
+
+        .section-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(242,234,211,0.14), transparent); }
+
+        /* Home base */
+        .homebase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(217,164,65,0.12);
+            border: 1px solid rgba(217,164,65,0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.8em;
+            color: var(--amber);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        /* Itinerary timeline */
+        .itin-timeline { position: relative; padding-left: 22px; }
+        .itin-timeline::before {
+            content: ''; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px;
+            background: linear-gradient(180deg, rgba(217,164,65,0.5), rgba(122,174,135,0.15));
+        }
+        .itin-day { position: relative; padding-bottom: 26px; }
+        .itin-day:last-child { padding-bottom: 0; }
+        .itin-day::before {
+            content: ''; position: absolute; left: -22px; top: 4px; width: 10px; height: 10px;
+            border-radius: 50%; background: var(--amber); box-shadow: 0 0 0 4px rgba(217,164,65,0.15);
+        }
+        .itin-day.is-maybe::before { background: var(--moss-light); box-shadow: 0 0 0 4px rgba(127,174,135,0.15); }
+        .itin-day-label { font-size: 0.7em; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); font-weight: 700; margin-bottom: 3px; }
+        .itin-day-title { font-size: 1em; font-weight: 700; margin-bottom: 6px; color: var(--cream); }
+        .itin-day-body { font-size: 0.87em; line-height: 1.6; color: var(--fog); }
+        .maybe-tag {
+            display: inline-block;
+            font-size: 0.65em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--moss-light);
+            background: rgba(127,174,135,0.14);
+            border: 1px solid rgba(127,174,135,0.35);
+            border-radius: 20px;
+            padding: 3px 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* Route stops */
+        .route-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+        .route-item { display: flex; gap: 14px; align-items: flex-start; }
+        .route-num {
+            flex-shrink: 0;
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: rgba(217,164,65,0.15);
+            border: 1px solid rgba(217,164,65,0.35);
+            color: var(--amber);
+            font-size: 0.78em;
+            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .route-title { font-size: 0.92em; font-weight: 700; color: var(--cream); margin-bottom: 2px; }
+        .route-sub { font-size: 0.8em; color: var(--fog); line-height: 1.5; }
+
+        /* Checklist */
+        .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88em; line-height: 1.5; color: var(--fog); }
+        .checklist .check-emoji { flex-shrink: 0; }
+
+        @media (max-width: 600px) {
+            .hero-wrap { padding: 60px 20px 40px; }
+            .sections-wrap { padding: 6px 16px 80px; }
+            .panel { padding: 22px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrap">
+
+        <div class="hero-wrap">
+            <p class="hero-eyebrow">🌲 A Father-Son Adventure</p>
+            <div class="hero-title">Redwoods Road Trip</div>
+            <p class="hero-sub">San Francisco to the Redwoods</p>
+            <p class="hero-dates">July 29 &ndash; August 2, 2026</p>
+            <p class="hero-tagline">A scenic journey up the California coast through towering redwoods and unforgettable views. Adam &amp; Aidan.</p>
+        </div>
+
+        <div class="sections-wrap">
+
+            <!-- Home Base -->
+            <div class="panel">
+                <div class="homebase-badge">📍 Home Base</div>
+                <h2>Sanderling Cabin, Moonstone Beach</h2>
+                <p class="panel-sub">Our base camp for the redwoods leg of the trip &middot; Reservation #7852 &middot; Check-in Thu Jul 30 after 4pm</p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Itinerary -->
+            <div class="panel">
+                <h2>🗺️ Itinerary</h2>
+                <p class="panel-sub">July 29 &ndash; August 2, 2026</p>
+
+                <div class="itin-timeline">
+                    <div class="itin-day is-maybe">
+                        <div class="itin-day-label">Wed, Jul 29</div>
+                        <div class="itin-day-title">SF Arrival Day <span class="maybe-tag">SF Plans — TBD</span></div>
+                        <p class="itin-day-body">Land at SFO 10:30am on flight 261, cross the Golden Gate, and pick up the rental car. Still deciding how to spend the day in San Francisco before heading north — a local gym session, the Marina, or Alcatraz, maybe with an In-N-Out stop on the way out of the city. Check in to Hotel Trio Healdsburg between 6&ndash;8pm.</p>
+                    </div>
+
+                    <div class="itin-day">
+                        <div class="itin-day-label">Thu, Jul 30</div>
+                        <div class="itin-day-title">Drive North</div>
+                        <p class="itin-day-body">Depart Healdsburg — morning and afternoon are cool scenic drives through the Avenue of the Giants, 31 miles through ancient redwoods. Check in to Sanderling Cabin, Moonstone Beach after 4pm, then catch the sunset that evening.</p>
+                    </div>
+
+                    <div class="itin-day">
+                        <div class="itin-day-label">Fri, Jul 31</div>
+                        <div class="itin-day-title">Tall Trees Grove <span class="maybe-tag" style="color:var(--amber); background:rgba(217,164,65,0.14); border-color:rgba(217,164,65,0.35);">Permit Secured</span></div>
+                        <p class="itin-day-body">Tall Trees Grove permit hike in the morning — among some of the tallest trees on Earth. Grab lunch on the way back, then head to the condo/beach area at Moonstone Beach for the afternoon.</p>
+                    </div>
+
+                    <div class="itin-day is-maybe">
+                        <div class="itin-day-label">Sat, Aug 1</div>
+                        <div class="itin-day-title">Coastline &amp; Trinidad Head <span class="maybe-tag">Fern Canyon — Maybe</span></div>
+                        <p class="itin-day-body">Coastline exploring and Trinidad Head. Fern Canyon is the stretch goal for the day — no permit secured yet, so it's a walk-up-availability long shot.</p>
+                    </div>
+
+                    <div class="itin-day">
+                        <div class="itin-day-label">Sun, Aug 2</div>
+                        <div class="itin-day-title">Drive Back to SFO</div>
+                        <p class="itin-day-body">5:00am departure from Sanderling Cabin — it's a ~5h45m drive to SFO. Return the rental car, then flight 2518 departs SFO at 1:10pm.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Route -->
+            <div class="panel">
+                <h2>🛣️ The Route</h2>
+                <p class="panel-sub">San Francisco to the Redwoods</p>
+
+                <ul class="route-list">
+                    <li class="route-item">
+                        <div class="route-num">1</div>
+                        <div>
+                            <div class="route-title">San Francisco</div>
+                            <div class="route-sub">Start the adventure — cross the Golden Gate, pick up the rental car, hit the road north.</div>
+                        </div>
+                    </li>
+                    <li class="route-item">
+                        <div class="route-num">2</div>
+                        <div>
+                            <div class="route-title">Wine Country — Healdsburg</div>
+                            <div class="route-sub">Night 1 at Hotel Trio Healdsburg — stretch your legs and grab dinner in wine country.</div>
+                        </div>
+                    </li>
+                    <li class="route-item">
+                        <div class="route-num">3</div>
+                        <div>
+                            <div class="route-title">Avenue of the Giants</div>
+                            <div class="route-sub">Scenic 31-mile drive through ancient redwoods.</div>
+                        </div>
+                    </li>
+                    <li class="route-item">
+                        <div class="route-num">4</div>
+                        <div>
+                            <div class="route-title">Fern Canyon <span class="maybe-tag">Maybe</span></div>
+                            <div class="route-sub">A magical hike through a lush, green canyon — pending a walk-up permit.</div>
+                        </div>
+                    </li>
+                    <li class="route-item">
+                        <div class="route-num">5</div>
+                        <div>
+                            <div class="route-title">Prairie Creek</div>
+                            <div class="route-sub">Elk viewing, scenic drives, and peaceful trails.</div>
+                        </div>
+                    </li>
+                    <li class="route-item">
+                        <div class="route-num">6</div>
+                        <div>
+                            <div class="route-title">Tall Trees Grove</div>
+                            <div class="route-sub">Redwood National Park — hike among some of the tallest trees on Earth.</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Planning Checklist -->
+            <div class="panel">
+                <h2>✅ Planning Checklist</h2>
+                <p class="panel-sub">What's locked in vs. still open</p>
+                <ul class="checklist">
+                    <li><span class="check-emoji">✈️</span><span>Flight 261, STL &rarr; SFO, arriving 10:30am &middot; Flight 2518, SFO &rarr; STL, departs 1:10pm Aug 2</span></li>
+                    <li><span class="check-emoji">🚗</span><span>Rental car pickup at SFO</span></li>
+                    <li><span class="check-emoji">🛏️</span><span>Night 1 lodging: Hotel Trio Healdsburg, check-in 6&ndash;8pm Jul 29</span></li>
+                    <li><span class="check-emoji">🏡</span><span>Home base: Sanderling Cabin, Moonstone Beach — reservation #7852, check-in Jul 30 after 4pm</span></li>
+                    <li><span class="check-emoji">🌲</span><span>Tall Trees Grove permit — secured</span></li>
+                    <li><span class="check-emoji">🌿</span><span>Fern Canyon permit — not yet secured, walk-up maybe</span></li>
+                    <li><span class="check-emoji">🏙️</span><span>SF day plan — gym, the Marina, or Alcatraz, still deciding</span></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
