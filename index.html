@@ -30,10 +30,18 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow-x: hidden;
             color: var(--cream);
-            background: linear-gradient(180deg, var(--forest) 0%, var(--forest-deep) 100%);
+            background: var(--forest-deep);
         }
 
-        .page-wrap { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        /* Background map */
+        .map-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+        .map-bg svg { position: absolute; top: 50%; left: 50%; width: 130vh; height: 130vh; min-width: 900px; min-height: 900px; transform: translate(-50%, -50%); opacity: 0.5; }
+        .map-overlay {
+            position: fixed; inset: 0; z-index: 1;
+            background: linear-gradient(180deg, rgba(8,20,16,0.55) 0%, rgba(8,20,16,0.82) 40%, rgba(8,20,16,0.94) 100%);
+        }
+
+        .page-wrap { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
 
         .hero-wrap {
             width: 100%;
@@ -50,6 +58,24 @@
         .hero-sub { font-size: clamp(1rem, 3vw, 1.3rem); font-weight: 300; letter-spacing: 1px; color: var(--amber); margin-bottom: 18px; }
         .hero-dates { font-size: 0.9em; color: var(--fog); letter-spacing: 2px; margin-bottom: 6px; }
         .hero-tagline { font-size: 0.85em; color: var(--fog); max-width: 420px; line-height: 1.6; margin-top: 10px; }
+
+        /* Countdown */
+        .countdown-container {
+            max-width: 420px;
+            margin: 28px auto 0;
+            background: rgba(242,234,211,0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(242,234,211,0.14);
+            border-radius: 14px;
+            padding: 18px 22px 20px;
+        }
+        .countdown-label { font-size: 0.7em; letter-spacing: 2.5px; text-transform: uppercase; color: var(--fog); margin-bottom: 14px; text-align: center; }
+        .countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .countdown-tile { text-align: center; }
+        .countdown-num { font-size: clamp(1.5rem, 6vw, 2rem); font-weight: 800; color: var(--amber); line-height: 1; }
+        .countdown-unit { font-size: 0.62em; letter-spacing: 1.5px; text-transform: uppercase; color: var(--fog); margin-top: 6px; }
+        .countdown-anchor { font-size: 0.7em; color: var(--fog); text-align: center; margin-top: 14px; font-style: italic; }
 
         .sections-wrap {
             width: 100%;
@@ -119,27 +145,35 @@
             vertical-align: middle;
         }
 
-        /* Route stops */
-        .route-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-        .route-item { display: flex; gap: 14px; align-items: flex-start; }
-        .route-num {
-            flex-shrink: 0;
-            width: 26px; height: 26px;
-            border-radius: 50%;
-            background: rgba(217,164,65,0.15);
-            border: 1px solid rgba(217,164,65,0.35);
-            color: var(--amber);
-            font-size: 0.78em;
-            font-weight: 800;
-            display: flex; align-items: center; justify-content: center;
+        /* Hub link card */
+        .hub-link {
+            display: flex; align-items: center; gap: 14px;
+            text-decoration: none; color: var(--cream);
+            background: rgba(217,164,65,0.07);
+            border: 1px solid rgba(217,164,65,0.2);
+            border-radius: 14px;
+            padding: 16px 20px;
+            transition: background 0.15s;
         }
-        .route-title { font-size: 0.92em; font-weight: 700; color: var(--cream); margin-bottom: 2px; }
-        .route-sub { font-size: 0.8em; color: var(--fog); line-height: 1.5; }
+        .hub-link:hover { background: rgba(217,164,65,0.14); }
+        .hub-link-icon { font-size: 1.6em; flex-shrink: 0; }
+        .hub-link-eyebrow { font-size: 0.72em; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--amber); margin-bottom: 3px; }
+        .hub-link-title { font-size: 0.95em; font-weight: 700; }
+        .hub-link-sub { font-size: 0.76em; color: var(--fog); margin-top: 2px; }
+        .hub-link-arrow { margin-left: auto; color: rgba(217,164,65,0.5); font-size: 1.1em; flex-shrink: 0; }
 
         /* Checklist */
+        .checklist-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+        .checklist-box-label { display: flex; align-items: center; gap: 6px; font-size: 0.72em; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+        .checklist-box-label.confirmed { color: var(--amber); }
+        .checklist-box-label.open { color: var(--moss-light); }
         .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88em; line-height: 1.5; color: var(--fog); }
+        .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85em; line-height: 1.5; color: var(--fog); }
         .checklist .check-emoji { flex-shrink: 0; }
+
+        @media (max-width: 560px) {
+            .checklist-columns { grid-template-columns: 1fr; gap: 24px; }
+        }
 
         @media (max-width: 600px) {
             .hero-wrap { padding: 60px 20px 40px; }
@@ -150,6 +184,48 @@
 </head>
 <body>
 
+    <div class="map-bg">
+        <svg viewBox="0 0 500 900" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(242,234,211,0.05)" stroke-width="1"/>
+                </pattern>
+            </defs>
+            <rect width="500" height="900" fill="url(#mapGrid)"/>
+
+            <!-- Pacific coastline, north (top) to San Francisco (bottom) -->
+            <path d="M 180 10 C 155 90, 205 150, 168 235 C 138 310, 195 375, 158 455 C 128 535, 182 595, 148 675 C 118 755, 172 815, 138 890"
+                  fill="none" stroke="rgba(127,174,135,0.45)" stroke-width="2.5"/>
+            <path d="M 180 10 C 155 90, 205 150, 168 235 C 138 310, 195 375, 158 455 C 128 535, 182 595, 148 675 C 118 755, 172 815, 138 890 L 0 890 L 0 10 Z"
+                  fill="rgba(20,60,90,0.18)"/>
+
+            <!-- Route (Highway 101 corridor) -->
+            <path d="M 228 55 C 205 135, 248 195, 218 275 C 188 355, 240 415, 210 495 C 180 575, 232 635, 202 715 C 172 795, 222 845, 192 885"
+                  fill="none" stroke="rgba(217,164,65,0.6)" stroke-width="2.5" stroke-dasharray="7 6" stroke-linecap="round"/>
+
+            <!-- Waypoints, north to south -->
+            <circle cx="222" cy="62" r="6" fill="rgba(217,164,65,0.85)"/>
+            <text x="238" y="67" fill="rgba(242,234,211,0.55)" font-size="15" font-family="-apple-system, sans-serif" letter-spacing="1">Moonstone Beach</text>
+
+            <circle cx="220" cy="285" r="6" fill="rgba(217,164,65,0.85)"/>
+            <text x="236" y="290" fill="rgba(242,234,211,0.55)" font-size="15" font-family="-apple-system, sans-serif" letter-spacing="1">Avenue of the Giants</text>
+
+            <circle cx="204" cy="565" r="6" fill="rgba(217,164,65,0.85)"/>
+            <text x="220" y="570" fill="rgba(242,234,211,0.55)" font-size="15" font-family="-apple-system, sans-serif" letter-spacing="1">Healdsburg</text>
+
+            <circle cx="195" cy="860" r="6" fill="rgba(217,164,65,0.85)"/>
+            <text x="211" y="865" fill="rgba(242,234,211,0.55)" font-size="15" font-family="-apple-system, sans-serif" letter-spacing="1">San Francisco</text>
+
+            <!-- Compass -->
+            <g transform="translate(430,60)" opacity="0.4">
+                <line x1="0" y1="-18" x2="0" y2="18" stroke="rgba(242,234,211,0.5)" stroke-width="1.5"/>
+                <path d="M 0 -18 L -6 -6 L 6 -6 Z" fill="rgba(242,234,211,0.6)"/>
+                <text x="0" y="-24" fill="rgba(242,234,211,0.6)" font-size="13" font-family="-apple-system, sans-serif" text-anchor="middle">N</text>
+            </g>
+        </svg>
+    </div>
+    <div class="map-overlay"></div>
+
     <div class="page-wrap">
 
         <div class="hero-wrap">
@@ -158,6 +234,17 @@
             <p class="hero-sub">San Francisco to the Redwoods</p>
             <p class="hero-dates">July 29 &ndash; August 2, 2026</p>
             <p class="hero-tagline">A scenic journey up the California coast through towering redwoods and unforgettable views. Adam &amp; Aidan.</p>
+
+            <div class="countdown-container">
+                <p class="countdown-label">⏱️ Countdown to Takeoff</p>
+                <div class="countdown-grid">
+                    <div class="countdown-tile"><div class="countdown-num" id="cdDays">--</div><div class="countdown-unit">Days</div></div>
+                    <div class="countdown-tile"><div class="countdown-num" id="cdHours">--</div><div class="countdown-unit">Hours</div></div>
+                    <div class="countdown-tile"><div class="countdown-num" id="cdMins">--</div><div class="countdown-unit">Mins</div></div>
+                    <div class="countdown-tile"><div class="countdown-num" id="cdSecs">--</div><div class="countdown-unit">Secs</div></div>
+                </div>
+                <p class="countdown-anchor">Until Flight 261 departs STL &middot; time TBD, placeholder shown</p>
+            </div>
         </div>
 
         <div class="sections-wrap">
@@ -168,6 +255,30 @@
                 <h2>Sanderling Cabin, Moonstone Beach</h2>
                 <p class="panel-sub">Our base camp for the redwoods leg of the trip &middot; Reservation #7852 &middot; Check-in Thu Jul 30 after 4pm</p>
             </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Photo Dump -->
+            <a href="./gallery.html" class="hub-link">
+                <span class="hub-link-icon">📸</span>
+                <div>
+                    <div class="hub-link-eyebrow">Photo Album</div>
+                    <div class="hub-link-title">The Photo Dump</div>
+                    <div class="hub-link-sub">Every trip photo, unsorted — tap to see them all</div>
+                </div>
+                <span class="hub-link-arrow">→</span>
+            </a>
+
+            <!-- Trip Journal -->
+            <a href="./journal.html" class="hub-link">
+                <span class="hub-link-icon">📓</span>
+                <div>
+                    <div class="hub-link-eyebrow">Live Updates</div>
+                    <div class="hub-link-title">Trip Journal</div>
+                    <div class="hub-link-sub">Post updates from the road — no laptop needed</div>
+                </div>
+                <span class="hub-link-arrow">→</span>
+            </a>
 
             <div class="section-divider"></div>
 
@@ -211,76 +322,66 @@
 
             <div class="section-divider"></div>
 
-            <!-- Route -->
-            <div class="panel">
-                <h2>🛣️ The Route</h2>
-                <p class="panel-sub">San Francisco to the Redwoods</p>
-
-                <ul class="route-list">
-                    <li class="route-item">
-                        <div class="route-num">1</div>
-                        <div>
-                            <div class="route-title">San Francisco</div>
-                            <div class="route-sub">Start the adventure — cross the Golden Gate, pick up the rental car, hit the road north.</div>
-                        </div>
-                    </li>
-                    <li class="route-item">
-                        <div class="route-num">2</div>
-                        <div>
-                            <div class="route-title">Wine Country — Healdsburg</div>
-                            <div class="route-sub">Night 1 at Hotel Trio Healdsburg — stretch your legs and grab dinner in wine country.</div>
-                        </div>
-                    </li>
-                    <li class="route-item">
-                        <div class="route-num">3</div>
-                        <div>
-                            <div class="route-title">Avenue of the Giants</div>
-                            <div class="route-sub">Scenic 31-mile drive through ancient redwoods.</div>
-                        </div>
-                    </li>
-                    <li class="route-item">
-                        <div class="route-num">4</div>
-                        <div>
-                            <div class="route-title">Fern Canyon <span class="maybe-tag">Maybe</span></div>
-                            <div class="route-sub">A magical hike through a lush, green canyon — pending a walk-up permit.</div>
-                        </div>
-                    </li>
-                    <li class="route-item">
-                        <div class="route-num">5</div>
-                        <div>
-                            <div class="route-title">Prairie Creek</div>
-                            <div class="route-sub">Elk viewing, scenic drives, and peaceful trails.</div>
-                        </div>
-                    </li>
-                    <li class="route-item">
-                        <div class="route-num">6</div>
-                        <div>
-                            <div class="route-title">Tall Trees Grove</div>
-                            <div class="route-sub">Redwood National Park — hike among some of the tallest trees on Earth.</div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="section-divider"></div>
-
             <!-- Planning Checklist -->
             <div class="panel">
                 <h2>✅ Planning Checklist</h2>
                 <p class="panel-sub">What's locked in vs. still open</p>
-                <ul class="checklist">
-                    <li><span class="check-emoji">✈️</span><span>Flight 261, STL &rarr; SFO, arriving 10:30am &middot; Flight 2518, SFO &rarr; STL, departs 1:10pm Aug 2</span></li>
-                    <li><span class="check-emoji">🚗</span><span>Rental car pickup at SFO</span></li>
-                    <li><span class="check-emoji">🛏️</span><span>Night 1 lodging: Hotel Trio Healdsburg, check-in 6&ndash;8pm Jul 29</span></li>
-                    <li><span class="check-emoji">🏡</span><span>Home base: Sanderling Cabin, Moonstone Beach — reservation #7852, check-in Jul 30 after 4pm</span></li>
-                    <li><span class="check-emoji">🌲</span><span>Tall Trees Grove permit — secured</span></li>
-                    <li><span class="check-emoji">🌿</span><span>Fern Canyon permit — not yet secured, walk-up maybe</span></li>
-                    <li><span class="check-emoji">🏙️</span><span>SF day plan — gym, the Marina, or Alcatraz, still deciding</span></li>
-                </ul>
+
+                <div class="checklist-columns">
+                    <div>
+                        <div class="checklist-box-label confirmed">✅ Confirmed</div>
+                        <ul class="checklist">
+                            <li><span class="check-emoji">✈️</span><span>Flight 261, STL &rarr; SFO, arriving 10:30am</span></li>
+                            <li><span class="check-emoji">✈️</span><span>Flight 2518, SFO &rarr; STL, departs 1:10pm Aug 2</span></li>
+                            <li><span class="check-emoji">🚗</span><span>Rental car pickup at SFO</span></li>
+                            <li><span class="check-emoji">🛏️</span><span>Night 1: Hotel Trio Healdsburg, check-in 6&ndash;8pm Jul 29</span></li>
+                            <li><span class="check-emoji">🏡</span><span>Home base: Sanderling Cabin, Moonstone Beach — res #7852, check-in Jul 30 after 4pm</span></li>
+                            <li><span class="check-emoji">🌲</span><span>Tall Trees Grove permit — secured</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="checklist-box-label open">🤔 Open to Assess</div>
+                        <ul class="checklist">
+                            <li><span class="check-emoji">🌿</span><span>Fern Canyon permit — not secured, walk-up maybe</span></li>
+                            <li><span class="check-emoji">🏙️</span><span>SF day plan — gym, the Marina, or Alcatraz</span></li>
+                            <li><span class="check-emoji">🕔</span><span>5:00am Sunday departure — confirm drive time closer to date</span></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
+
+    <script>
+        const FLIGHT_261_DEPARTURE = new Date('2026-07-29T08:30:00-05:00'); // STL (Central) — placeholder, confirm exact time
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = FLIGHT_261_DEPARTURE - now;
+
+            if (diff <= 0) {
+                document.getElementById('cdDays').textContent = '0';
+                document.getElementById('cdHours').textContent = '0';
+                document.getElementById('cdMins').textContent = '0';
+                document.getElementById('cdSecs').textContent = '0';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('cdDays').textContent = days;
+            document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+            document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Journal — Redwoods Road Trip</title>
+    <meta property="og:title" content="Trip Journal — Redwoods Road Trip">
+    <meta property="og:description" content="Live updates from the road.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --forest: #0d1f14;
+            --forest-deep: #081410;
+            --moss: #4a7c59;
+            --moss-light: #7fae87;
+            --amber: #d9a441;
+            --cream: #f2ead3;
+            --fog: rgba(242,234,211,0.55);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+            color: var(--cream);
+            background: var(--forest-deep);
+        }
+
+        .page-wrap { width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+        .hero { width: 100%; max-width: 640px; padding: 60px 24px 30px; text-align: center; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--fog);
+            text-decoration: none;
+            font-size: 0.75em;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            transition: color 0.15s;
+        }
+        .back-link:hover { color: var(--cream); }
+
+        .hero-eyebrow { font-size: 0.8em; letter-spacing: 5px; text-transform: uppercase; color: var(--moss-light); margin-bottom: 14px; }
+        .hero-title { font-size: clamp(2.2rem, 8vw, 3.4rem); font-weight: 900; line-height: 1.02; letter-spacing: -1px; margin-bottom: 12px; color: var(--cream); }
+        .hero-sub { font-size: 0.88em; color: var(--fog); line-height: 1.6; }
+
+        .content { width: 100%; max-width: 640px; padding: 0 24px 100px; display: flex; flex-direction: column; gap: 24px; }
+
+        .panel {
+            background: rgba(242,234,211,0.05);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(242,234,211,0.12);
+            border-radius: 18px;
+            padding: 26px 28px;
+        }
+        .panel h2 { font-size: 1.1em; font-weight: 700; margin-bottom: 4px; color: var(--cream); }
+        .panel-sub { font-size: 0.8em; color: var(--fog); margin-bottom: 20px; }
+
+        /* Poster toggle */
+        .poster-row { display: flex; gap: 10px; margin-bottom: 16px; }
+        .poster-btn {
+            flex: 1;
+            background: rgba(242,234,211,0.07);
+            border: 1px solid rgba(242,234,211,0.14);
+            border-radius: 9px;
+            padding: 11px 10px;
+            color: var(--fog);
+            font-family: inherit;
+            font-size: 0.9em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .poster-btn:hover { background: rgba(242,234,211,0.12); }
+        .poster-btn.selected { background: rgba(217,164,65,0.16); border-color: rgba(217,164,65,0.5); color: var(--amber); }
+
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 0.7em; letter-spacing: 2px; text-transform: uppercase; color: var(--fog); margin-bottom: 7px; }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            background: rgba(242,234,211,0.07);
+            border: 1px solid rgba(242,234,211,0.14);
+            border-radius: 9px;
+            padding: 10px 13px;
+            color: var(--cream);
+            font-family: inherit;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: rgba(217,164,65,0.5); }
+        .form-input::placeholder, .form-textarea::placeholder { color: rgba(242,234,211,0.25); }
+        .form-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--moss) 0%, var(--amber) 100%);
+            border: none;
+            border-radius: 10px;
+            color: var(--forest-deep);
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .btn-submit:hover { opacity: 0.85; }
+        .btn-submit:disabled { opacity: 0.4; cursor: default; }
+
+        .submit-note { font-size: 0.74em; color: var(--fog); text-align: center; margin-top: 10px; min-height: 18px; }
+
+        /* Entries feed */
+        .entry { padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid rgba(242,234,211,0.1); }
+        .entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .entry-meta { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+        .entry-poster { font-size: 0.88em; font-weight: 700; color: var(--amber); }
+        .entry-time { font-size: 0.7em; color: var(--fog); letter-spacing: 0.5px; }
+        .entry-body { font-size: 0.9em; line-height: 1.65; color: var(--cream); white-space: pre-wrap; }
+        .entry-empty { text-align: center; padding: 22px 0 8px; color: var(--fog); font-size: 0.85em; font-style: italic; }
+
+        @media (max-width: 600px) {
+            .hero { padding: 44px 18px 24px; }
+            .content { padding: 0 16px 80px; }
+            .panel { padding: 22px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrap">
+
+        <div class="hero">
+            <a href="./index.html" class="back-link">← Back to the Trip</a>
+            <p class="hero-eyebrow">🌲 Redwoods Road Trip</p>
+            <h1 class="hero-title">Trip Journal</h1>
+            <p class="hero-sub">Live updates from the road — post from anywhere, no laptop needed.</p>
+        </div>
+
+        <div class="content">
+
+            <!-- Post form -->
+            <div class="panel">
+                <h2>✍️ New Entry</h2>
+                <p class="panel-sub">Posts show up below instantly</p>
+
+                <div class="poster-row">
+                    <button type="button" class="poster-btn" data-name="Adam">Adam</button>
+                    <button type="button" class="poster-btn" data-name="Aidan">Aidan</button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Day <span style="color:rgba(242,234,211,0.3); font-weight:400; text-transform:none; letter-spacing:0;">(optional)</span></label>
+                    <select class="form-select" id="jDay">
+                        <option value="">— Not tagged —</option>
+                        <option value="Wed 7/29 — SF">Wed 7/29 — SF</option>
+                        <option value="Thu 7/30 — Avenue of the Giants">Thu 7/30 — Avenue of the Giants</option>
+                        <option value="Fri 7/31 — Tall Trees Grove">Fri 7/31 — Tall Trees Grove</option>
+                        <option value="Sat 8/1 — Coastline & Trinidad Head">Sat 8/1 — Coastline &amp; Trinidad Head</option>
+                        <option value="Sun 8/2 — Heading Home">Sun 8/2 — Heading Home</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">What's happening</label>
+                    <textarea class="form-textarea" id="jBody" placeholder="Just saw the tallest tree either of us has ever seen…" maxlength="1000"></textarea>
+                </div>
+
+                <button class="btn-submit" id="submitJournalBtn" disabled>Pick Adam or Aidan Above →</button>
+                <p class="submit-note" id="journalNote"></p>
+            </div>
+
+            <!-- Feed -->
+            <div class="panel">
+                <h2>📓 The Feed</h2>
+                <p class="panel-sub">Newest first</p>
+                <div id="journalFeed">
+                    <div class="entry-empty">No entries yet — be the first to post.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import {
+            collection, addDoc, onSnapshot,
+            query, orderBy, serverTimestamp
+        } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+        import { db } from './firebase-init.js';
+
+        function esc(str) {
+            return String(str)
+                .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function formatTime(ts) {
+            if (!ts) return 'just now';
+            const d = ts.toDate ? ts.toDate() : new Date(ts);
+            return d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+        }
+
+        function renderFeed(entries) {
+            const el = document.getElementById('journalFeed');
+            if (entries.length === 0) {
+                el.innerHTML = '<div class="entry-empty">No entries yet — be the first to post.</div>';
+                return;
+            }
+            el.innerHTML = entries.map(e => `
+                <div class="entry">
+                    <div class="entry-meta">
+                        <span class="entry-poster">${esc(e.name)}</span>
+                        ${e.day ? `<span class="entry-time">&middot; ${esc(e.day)}</span>` : ''}
+                        <span class="entry-time">&middot; ${formatTime(e.createdAt)}</span>
+                    </div>
+                    <div class="entry-body">${esc(e.body)}</div>
+                </div>
+            `).join('');
+        }
+
+        const q = query(collection(db, 'redwoodsJournal'), orderBy('createdAt', 'desc'));
+        onSnapshot(q, snapshot => {
+            renderFeed(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+        }, () => {
+            document.getElementById('journalFeed').innerHTML =
+                '<div class="entry-empty">Couldn\'t load entries right now.</div>';
+        });
+
+        let selectedName = null;
+
+        document.querySelectorAll('.poster-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.poster-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedName = btn.dataset.name;
+                updateSubmitState();
+            });
+        });
+
+        function updateSubmitState() {
+            const btn = document.getElementById('submitJournalBtn');
+            if (!selectedName) {
+                btn.disabled = true;
+                btn.textContent = 'Pick Adam or Aidan Above →';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Post Entry →';
+            }
+        }
+
+        document.getElementById('submitJournalBtn').addEventListener('click', async () => {
+            const body = document.getElementById('jBody').value.trim();
+            const day = document.getElementById('jDay').value;
+            const note = document.getElementById('journalNote');
+            const btn = document.getElementById('submitJournalBtn');
+
+            if (!selectedName || !body) {
+                note.style.color = '#f0a090';
+                note.textContent = 'Pick who\'s posting and write something first.';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Posting…';
+            note.textContent = '';
+
+            try {
+                await addDoc(collection(db, 'redwoodsJournal'), {
+                    name: selectedName,
+                    day: day || null,
+                    body,
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('jBody').value = '';
+                note.style.color = '#a8d9b5';
+                note.textContent = 'Posted!';
+                updateSubmitState();
+            } catch {
+                note.style.color = '#f0a090';
+                note.textContent = 'Something went wrong — try again.';
+                updateSubmitState();
+            }
+        });
+    </script>
+
+</body>
+</html>
