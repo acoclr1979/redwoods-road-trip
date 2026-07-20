@@ -24,8 +24,8 @@ To deploy: `git add . && git commit -m "..." && git push` — GitHub Pages goes 
 
 - **Dates:** Wed Jul 29 – Sun Aug 2, 2026
 - **Home base:** Moonstone Beach (rental with an ocean-view deck)
-- **Route:** San Francisco → Wine Country (Healdsburg/Windsor) → Avenue of the Giants → Fern Canyon (maybe) → Prairie Creek → Tall Trees Grove
-- **Permits:** Tall Trees Grove secured. Fern Canyon NOT secured — it's a stretch-goal/maybe, contingent on a walk-up permit.
+- **Route:** San Francisco → Wine Country (Healdsburg/Windsor) → Avenue of the Giants → Prairie Creek (Tall Trees Grove, Newton B. Drury Parkway, Elk Loop) → Trinidad Head/Agate Beach → Howland Hill Road/Stout Grove (Crescent City)
+- **Permits:** Tall Trees Grove secured. Fern Canyon is cut — vehicle-access reservations for the trip window are gone, and the only remaining access (10-mile round-trip hike) wasn't worth it. Howland Hill Road needs no permit.
 - **Fly:** STL ↔ SFO
 
 ## Pages
